@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+</head>
+<body>
+    <h1>Welcome to the morse code page</h1>
+    <form action={{ url_for('morse_code.translate_to_morse') }} method="post">
+        <label for="text_to_translate">Enter text to translate:</label>
+        <input type="text" id="text_to_translate" name="text_to_translate" required>
+        <input type="submit" value="Translate">
+    </form>
+    <p>Translation: '{{ text_to_translate }}' = '{{ translation  }}'</p>
+    <a href={{ url_for('main.home') }}>Home</a>
+</body>
+</html>
