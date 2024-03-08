@@ -1,3 +1,5 @@
+from custom_errors import InvalidSlotError, OccupiedSlotError
+
 class TicTacToe:
     def __init__(self):
         self.player_x = []
@@ -24,13 +26,23 @@ class TicTacToe:
         if player_sign == "o":
             return self.player_o
         raise ValueError("Invalid player, must be 'x' or 'o'.")
+    
+    def _check_valid_slot(self, slot):
+        if slot < 1 or slot > 9:
+            raise InvalidSlotError(slot)
+
+    def _check_occupied_slot(self, slot):
+        if slot in self.player_x + self.player_o:
+            raise OccupiedSlotError(slot)
 
     def place(self, player_sign, slot):
+        self._check_valid_slot(slot)
+        self._check_occupied_slot(slot)
         player = self.get_player(player_sign)
-        if slot not in (self.player_x + self.player_o):
-            player.append(slot)
+        player.append(slot)
     
     def move(self, player_sign, slot):
+        self._check_valid_slot(slot)
         player = self.get_player(player_sign)
         player.remove(slot)   
 
@@ -43,3 +55,4 @@ if __name__ == "__main__":
     game.place('x', 4)
     game.place('o', 5)
     game.draw_board()
+    game.place('x', 10)
