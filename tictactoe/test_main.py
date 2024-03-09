@@ -40,5 +40,15 @@ class TestTicTacToe(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.game.get_player('z')
 
+    def test_check_win(self):
+        self.game.player_x = [1,2,3]
+        self.assertTrue(self.game.check_win('x'))
+        self.game.player_o = [1,5,8]
+        self.assertFalse(self.game.check_win('o'))
+        self.game.player_x = [3,4,7]
+        self.assertTrue(self.game.check_win('x'))
+        self.game.player_o = [5,8,2]
+        self.assertTrue(self.game.check_win('o'))
+
 if __name__ == '__main__':
     unittest.main()
