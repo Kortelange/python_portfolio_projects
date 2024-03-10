@@ -1,4 +1,4 @@
-from custom_errors import InvalidSlotError, OccupiedSlotError
+from .custom_errors import InvalidSlotError, OccupiedSlotError
 
 
 class TicTacToe:
@@ -61,18 +61,22 @@ class TicTacToe:
             ):
                 return True
         return False
-    
 
-if __name__ == "__main__":
-    def draw_board(game):
+
+def draw_board(game):
         game.create_board()
         for i in range(3):
             print("".join([f" {game.slots[i * 3 + j]} |" for j in range(3)])[:-1])
             if i != 2:
                 print(11 * "-")
 
+
+def command_line_game():
     game = TicTacToe()
-    player_sign = 'x'
+    player_sign = ""
+    while player_sign not in ("x", "o"):
+        player_sign = input("Choose starting player, 'x' or 'y': ")
+    player_sign = 'x' if player_sign == 'o' else 'o'
     while not game.check_win(player_sign):
         player_sign = 'x' if player_sign == 'o' else 'o'
         player = game.get_player(player_sign)
