@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, make_response
 from morse_code import text_to_morse
 from tictactoe import TicTacToe
 
@@ -70,16 +70,15 @@ def place():
     player = request.json['player']
     index = int(request.json['index'])
     game = get_game_from_session()
-    game.place(player, index)
-    game_over = game.check_win(player)
-    player = change_player(player)
-    update_game_session(game)
-    return jsonify(
-        player=player,
-        available_spots=list(game.get_avaliable_slots()),
-        game_over=game_over
-    )
-    
-
-
-    
+    try:
+        game.place(player, index)
+        game_over = game.check_win(player)
+        player = change_player(player)
+        update_game_session(game)
+        return jsonify(
+            player=player,
+            available_spots=list(game.get_avaliable_slots()),
+            game_over=game_over
+        )
+    except:
+        return jsonify(error="Please place at an unoccupied slot."), 400

@@ -44,15 +44,29 @@ function placeBrick(index) {
             },
             body: JSON.stringify({ index: index, player: currentPlayer })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => {throw err; });
+            }
+            return response.json();
+        })
         .then(data => {
+            document.getElementById('error-message').style.display='none';
             document.querySelector(`#cell${index}`).textContent = currentPlayer.toUpperCase();
             gameOver = data.game_over;
-            if (gameOver == true) {
-                console.log(`${currentPlayer} won!`)
+            if (gameOver) {
+                document.getElementById('win-message').textContent = `Congratulations! ${currentPlayer} won!`;
+                document.getElementById('win-message').style.display = 'block';
+                document.getElementById('instructions').style.display = 'none';
             }
             currentPlayer = data.player;
+            document.getElementById('instructions').textContent = `${currentPlayer.toUpperCase()}'s turn.`;
         })
+        .catch(error => {
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.textContent = error.error;
+            errorMessage.style.display = 'block';
+        });
     }
 }
 
