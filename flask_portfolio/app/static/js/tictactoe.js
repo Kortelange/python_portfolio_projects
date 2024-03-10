@@ -9,7 +9,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     document.querySelectorAll('.cell').forEach(function(div){
         div.addEventListener('click', function(){
-            placeBrick(this.id.substring(4));
+            if (this.getAttribute('slot-occupied') === 'true'){
+                moveBrick(this.id.substring(4));
+            } else {
+                placeBrick(this.id.substring(4));
+            }
         });
     });
 });
@@ -52,7 +56,9 @@ function placeBrick(index) {
         })
         .then(data => {
             document.getElementById('error-message').style.display='none';
-            document.querySelector(`#cell${index}`).textContent = currentPlayer.toUpperCase();
+            const divElement = document.querySelector(`#cell${index}`);
+            divElement.textContent = currentPlayer.toUpperCase();
+            divElement.setAttribute('slot-occupied', 'true');
             gameOver = data.game_over;
             if (gameOver) {
                 document.getElementById('win-message').textContent = `Congratulations! ${currentPlayer} won!`;
@@ -61,6 +67,37 @@ function placeBrick(index) {
             }
             currentPlayer = data.player;
             document.getElementById('instructions').textContent = `${currentPlayer.toUpperCase()}'s turn.`;
+        })
+        .catch(error => {
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.textContent = error.error;
+            errorMessage.style.display = 'block';
+        });
+    }
+}
+
+function moveBrick(index) {
+    url = document.body.getAttribute('move-url')
+    if (!gameOver) {
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ index: index, player: currentPlayer })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => {throw err; });
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById('error-message').style.display='none';
+            const divElement = document.querySelector(`#cell${index}`);
+            divElement.textContent = "";
+            divElement.setAttribute('slot-occupied', 'false');
+            document.getElementById('instructions').textContent = `${currentPlayer.toUpperCase()}'s to place.`;
         })
         .catch(error => {
             const errorMessage = document.getElementById('error-message');

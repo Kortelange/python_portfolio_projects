@@ -61,6 +61,12 @@ def update_game_session(game: TicTacToe):
     session['player_o'] = game.player_o
 
 
+def to_move(player):
+    if player == 'x':
+        return not (len(session['player_x']) < 3)
+    return not (len(session['player_o']) < 3)
+
+
 def get_game_from_session() -> TicTacToe:
     return TicTacToe(session['player_x'], session['player_o'])
 
@@ -68,6 +74,8 @@ def get_game_from_session() -> TicTacToe:
 @tic_tac_toe.route("/place", methods=['POST'])
 def place():
     player = request.json['player']
+    if to_move(player):
+        return jsonify(error="Please choose a brick to move."), 400
     index = int(request.json['index'])
     game = get_game_from_session()
     try:
@@ -82,3 +90,21 @@ def place():
         )
     except:
         return jsonify(error="Please place at an unoccupied slot."), 400
+    
+@tic_tac_toe.route("/move", methods=["POST"])
+def move():
+    player = request.json['player']
+    index = int(request.json['index'])
+    if not to_move(player):
+        return jsonify(error="You need to place a brick."), 400
+    try:
+        game = get_game_from_session()
+        game.move(player, index)
+        update_game_session(game)
+        return jsonify(
+            player=player,
+            available_spots=list(game.get_avaliable_slots()),
+        )
+    except:
+        return jsonify(error="Please pick an available brick to move"), 400
+

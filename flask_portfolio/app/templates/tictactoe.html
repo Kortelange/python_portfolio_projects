@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tictactoe.css') }}">
     <title>Portfolio</title>
 </head>
-<body start-player-url="{{ url_for('tic_tac_toe.start_game') }}" place-url="{{ url_for('tic_tac_toe.place') }}">
+<body start-player-url="{{ url_for('tic_tac_toe.start_game') }}" place-url="{{ url_for('tic_tac_toe.place') }}" move-url="{{ url_for('tic_tac_toe.move') }}">
     <h1>Welcome to Tic tac toe</h1>
     <h2>TicTacToe Game</h2>
     <div id="choose-start-player">
@@ -19,7 +19,7 @@
     <div id="win-message" style="display: none; color: green;"></div>
     <div class="board">
         {% for i in range(9) %}
-            <div id="cell{{ i + 1 }}" class="cell"></div>
+            <div id="cell{{ i + 1 }}" class="cell" slot-occupied="false"></div>
         {% endfor %}
     </div>
     <a href={{ url_for('main.home') }}>Home</a>
