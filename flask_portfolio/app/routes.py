@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 from morse_code import text_to_morse
 
 # Define blueprints
@@ -36,4 +36,13 @@ def translate_to_morse():
 
 @tic_tac_toe.route("/")
 def home():
-    return render_template('tictactoe.html')
+    return render_template(
+        'tictactoe.html', 
+        game_started=False
+    )
+
+
+@tic_tac_toe.route("/starting_player", methods=['POST'])
+def starting_player():
+    player = request.json['player'].lower()
+    return jsonify(player=player)
