@@ -2,10 +2,9 @@ from .custom_errors import InvalidSlotError, OccupiedSlotError
 
 
 class TicTacToe:
-    def __init__(self):
-        self.player_x = []
-        self.player_o = []
-        self.create_board()
+    def __init__(self, player_x=[], player_o=[]):
+        self.player_x = player_x
+        self.player_o = player_o
 
     def create_board(self):
         self.slots = [" "] * 9
