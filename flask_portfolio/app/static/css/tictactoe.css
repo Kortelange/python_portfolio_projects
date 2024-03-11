@@ -27,3 +27,7 @@ button {
 #instructions {
     display: : none;
 }
+
+#reset-game {
+    display: none;
+}
